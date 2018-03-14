@@ -57,19 +57,22 @@ class MainPage(webapp2.RequestHandler):
 
         # get user data object from datastore of current user (logged in)
         myuser = self.getMyUser()
-        # Add anagram to datastore
-        # TODO: only add when not empty
-        text = self.request.get('anagram')
-        anagramID = self.generateKey(text)
-        anagramKey = ndb.Key('Anagrams', anagramID)
-        anagrams = anagramKey.get()
 
-        if anagrams:
-            # an anagram with this key already exists
-            myuser.addToAnagram(text, anagramKey)
+        text = self.request.get('anagram').lower()
+        if text == None or text == '':
+            pass
         else:
-            # this key doesnt exist --> write new anagram object to datastore
-            myuser.addNewAnagram(text, myuser)
+            # Add anagram to datastore
+            anagramID = self.generateKey(text)
+            anagramKey = ndb.Key('Anagrams', anagramID)
+            anagrams = anagramKey.get()
+
+            if anagrams:
+                # an anagram with this key already exists
+                myuser.addToAnagram(text, anagramKey)
+            else:
+                # this key doesnt exist --> write new anagram object to datastore
+                myuser.addNewAnagram(text, myuser)
 
         # redirect to '/' --> MainPage
         self.redirect('/')

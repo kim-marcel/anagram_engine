@@ -1,3 +1,4 @@
+import logging
 from google.appengine.ext import ndb
 from anagrams import Anagrams
 
@@ -20,14 +21,16 @@ class MyUser(ndb.Model):
         # self.put()
 
     def addToAnagram(self, text, anagramKey):
-        # instead of test the actual id should be used (alphabetically ordered text)
-        key = self.generateKey(text)
         anagram = anagramKey.get()
-        anagram.words.append(text)
-        # self.anagrams.append(anagram)
+        if text in anagram.words:
+            # do nothing: word is already in there
+            pass
 
-        # commit to datastore
-        anagram.put()
+        else:
+            # append word
+            anagram.words.append(text)
+            # commit to datastore
+            anagram.put()
 
     def generateKey(self, text):
         key = text.lower()
