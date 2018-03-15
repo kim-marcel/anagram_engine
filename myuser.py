@@ -8,7 +8,7 @@ class MyUser(ndb.Model):
     anagrams = ndb.KeyProperty(kind='Anagrams', repeated=True)
 
     def addNewAnagram(self, text):
-        generatedKey = self.generateKey(text)
+        generatedKey = Anagrams.generateKey(text)
         key = self.key.id() + '/' + generatedKey
         self.anagrams.append(ndb.Key('Anagrams', key))
         anagram = Anagrams(id=key)
@@ -18,7 +18,6 @@ class MyUser(ndb.Model):
         self.put()
 
     def addToAnagram(self, text, anagramKey):
-        # bug: only search in anagrms of the log
         anagram = anagramKey.get()
         if text in anagram.words:
             # do nothing: word is already in there
@@ -30,7 +29,3 @@ class MyUser(ndb.Model):
             anagram.words.append(text)
             # commit to datastore
             anagram.put()
-
-    def generateKey(self, text):
-        key = text.lower()
-        return ''.join(sorted(key))

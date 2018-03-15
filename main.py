@@ -46,8 +46,8 @@ class MainPage(webapp2.RequestHandler):
             url = users.create_login_url(self.request.uri)
             url_string = 'login'
 
-        self.renderHTML(url, url_string, user,
-                        self.getAnagramsOfUser(self.getMyUser()))
+        self.renderMainHTML(url, url_string, user,
+                            self.getAnagramsOfUser(self.getMyUser()))
 
     # POST method
     def post(self):
@@ -66,12 +66,7 @@ class MainPage(webapp2.RequestHandler):
 
         elif button == 'Search':
             searchResult = self.search(inputText, myuser)
-            template_search_values = {
-                'searchResult': searchResult
-            }
-
-            template = JINJA_ENVIRONMENT.get_template('searchResult.html')
-            self.response.write(template.render(template_search_values))
+            self.renderSearchHTML(searchResult)
 
     def add(self, myuser, text):
         logging.debug('Add something')
@@ -80,7 +75,7 @@ class MainPage(webapp2.RequestHandler):
 
         else:
             # Add anagram to datastore
-            anagramID = myuser.key.id() + '/' + self.generateKey(text)
+            anagramID = myuser.key.id() + '/' + Anagrams.generateKey(text)
             anagramKey = ndb.Key('Anagrams', anagramID)
             anagrams = anagramKey.get()
 
@@ -90,12 +85,11 @@ class MainPage(webapp2.RequestHandler):
             else:
                 # this key doesnt exist --> write new anagram object to datastore
                 myuser.addNewAnagram(text)
-                # self.renderHTML()
 
     # returns a list with all the items (if nothing found returns None)
     def search(self, text, myuser):
         logging.debug('Search: ' + text)
-        anagramID = myuser.key.id() + '/' + self.generateKey(text)
+        anagramID = myuser.key.id() + '/' + Anagrams.generateKey(text)
         anagrams = self.getAnagramsOfUser(myuser)
         result = None
         for anagram in anagrams:
@@ -134,7 +128,7 @@ class MainPage(webapp2.RequestHandler):
         # commit to datastore
         myuser.put()
 
-    def renderHTML(self, url, url_string, user, anagrams):
+    def renderMainHTML(self, url, url_string, user, anagrams):
         template_values = {
             'url': url,
             'url_string': url_string,
@@ -144,6 +138,14 @@ class MainPage(webapp2.RequestHandler):
 
         template = JINJA_ENVIRONMENT.get_template('main.html')
         self.response.write(template.render(template_values))
+
+    def renderSearchHTML(self, searchResult):
+        template_search_values = {
+            'searchResult': searchResult
+        }
+
+        template = JINJA_ENVIRONMENT.get_template('searchResult.html')
+        self.response.write(template.render(template_search_values))
 
     def getAnagramsOfUser(self, myUser):
         logging.debug("Test")
@@ -157,10 +159,6 @@ class MainPage(webapp2.RequestHandler):
                 myList.append(anagrams)
 
             return myList
-
-    def generateKey(self, text):
-        key = text.lower()
-        return ''.join(sorted(key))
 
 
 # starts the web application we specify the full routing table here as well

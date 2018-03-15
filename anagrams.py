@@ -6,3 +6,8 @@ class Anagrams(ndb.Model):
     sortedWord = ndb.StringProperty()
     # List with all the anagrams for given set of chars
     words = ndb.StringProperty(repeated=True)
+
+    @staticmethod
+    def generateKey(text):
+        key = text.lower()
+        return ''.join(sorted(key))
