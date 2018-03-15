@@ -80,7 +80,7 @@ class MainPage(webapp2.RequestHandler):
 
         else:
             # Add anagram to datastore
-            anagramID = self.generateKey(text)
+            anagramID = myuser.key.id() + '/' + self.generateKey(text)
             anagramKey = ndb.Key('Anagrams', anagramID)
             anagrams = anagramKey.get()
 
@@ -95,7 +95,7 @@ class MainPage(webapp2.RequestHandler):
     # returns a list with all the items (if nothing found returns None)
     def search(self, text, myuser):
         logging.debug('Search: ' + text)
-        anagramID = self.generateKey(text)
+        anagramID = myuser.key.id() + '/' + self.generateKey(text)
         anagrams = self.getAnagramsOfUser(myuser)
         result = None
         for anagram in anagrams:

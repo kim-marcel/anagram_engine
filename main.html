@@ -10,7 +10,7 @@
       <p>{{ user.email() }}
         is logged in.</p>
       <form method="post" action="/">
-        Add Anagram:
+        Add/ Search Anagram:
         <br>
         <input type="text" name="anagram"/>
         <input type="submit" name="button" value="Add"/>
@@ -19,7 +19,7 @@
       <p>Your anagrams:</p>
       {% for anagram in anagrams %}
         {{ loop.index }}:
-        <b>{{ anagram.key.id() }}</b>
+        <b>{{ anagram.sortedWord }}</b>
         {% for word in anagram.words %}
           {{ word }}
         {% endfor %}

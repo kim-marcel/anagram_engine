@@ -1,3 +1,4 @@
+import logging
 from google.appengine.ext import ndb
 from anagrams import Anagrams
 
@@ -7,18 +8,21 @@ class MyUser(ndb.Model):
     anagrams = ndb.KeyProperty(kind='Anagrams', repeated=True)
 
     def addNewAnagram(self, text):
-        # instead of test the actual id should be used (alphabetically ordered text)
-        key = self.generateKey(text)
+        generatedKey = self.generateKey(text)
+        key = self.key.id() + '/' + generatedKey
         self.anagrams.append(ndb.Key('Anagrams', key))
         anagram = Anagrams(id=key)
         anagram.words.append(text)
+        anagram.sortedWord = generatedKey
         anagram.put()
         self.put()
 
     def addToAnagram(self, text, anagramKey):
+        # bug: only search in anagrms of the log
         anagram = anagramKey.get()
         if text in anagram.words:
             # do nothing: word is already in there
+            logging.debug(text + ' already exists.')
             pass
 
         else:
