@@ -66,7 +66,7 @@ class MainPage(webapp2.RequestHandler):
 
         elif button == 'Search':
             searchResult = self.search(inputText, myuser)
-            self.renderSearchHTML(searchResult)
+            self.renderSearchHTML(False, searchResult)
 
         elif button == 'Show':
             number = self.request.get('number')
@@ -75,7 +75,8 @@ class MainPage(webapp2.RequestHandler):
                 if number > 0:
                     logging.debug('Search for anagrams with ' +
                                   str(number) + ' letters.')
-            self.redirect('/')
+            self.renderSearchHTML(True, None)
+            # self.redirect('/')
 
     def add(self, myuser, text):
         logging.debug('Add something')
@@ -148,9 +149,10 @@ class MainPage(webapp2.RequestHandler):
         template = JINJA_ENVIRONMENT.get_template('main.html')
         self.response.write(template.render(template_values))
 
-    def renderSearchHTML(self, searchResult):
+    def renderSearchHTML(self, numberSearch, searchResult):
         template_search_values = {
-            'searchResult': searchResult
+            'isNumberSearch': numberSearch,
+            'searchResult': searchResult,
         }
 
         template = JINJA_ENVIRONMENT.get_template('searchResult.html')

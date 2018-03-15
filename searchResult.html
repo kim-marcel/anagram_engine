@@ -8,13 +8,23 @@
   <body>
 
     <p>Search results:</p>
-    {% if searchResult %}
-      Your Search result:
-      {% for item in searchResult %}
-        {{ item }}
-      {% endfor %}
+    {% if isNumberSearch %}
+      <!-- user searched for words with a specific lenght -->
+      This is a number search
     {% else %}
-      No anagrams found for this word!
+      <!-- user searched for anagrams of a word -->
+      {% if searchResult %}
+        Your Search result:
+        {% for item in searchResult %}
+          {{ item }}
+        {% endfor %}
+      {% else %}
+        No anagrams found for this word!
+      {% endif %}
+
+      {% if numberResult %}
+        Test
+      {% endif %}
     {% endif %}
 
     <form method="get" action="/">
