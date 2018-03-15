@@ -10,7 +10,19 @@
     <p>Search results:</p>
     {% if isNumberSearch %}
       <!-- user searched for words with a specific lenght -->
-      This is a number search
+      {% if searchResult %}
+        These are your results:<br>
+        {% for anagram in searchResult %}
+          {{ loop.index }}:
+          <b>{{ anagram.sortedWord }}</b>
+          {% for word in anagram.words %}
+            {{ word }}
+          {% endfor %}
+          <br>
+        {% endfor %}
+      {% else %}
+        No words found with this length.
+      {% endif %}
     {% else %}
       <!-- user searched for anagrams of a word -->
       {% if searchResult %}

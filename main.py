@@ -60,7 +60,7 @@ class MainPage(webapp2.RequestHandler):
         inputText = self.request.get('anagram').lower()
 
         if button == 'Add':
-            self.add(myuser, inputText)
+            self.add(inputText, myuser)
             # redirect to '/' --> MainPage
             self.redirect('/')
 
@@ -70,15 +70,10 @@ class MainPage(webapp2.RequestHandler):
 
         elif button == 'Show':
             number = self.request.get('number')
-            if number:
-                number = int(number)
-                if number > 0:
-                    logging.debug('Search for anagrams with ' +
-                                  str(number) + ' letters.')
-            self.renderSearchHTML(True, None)
-            # self.redirect('/')
+            result = self.numberSearch(number, myuser)
+            self.renderSearchHTML(True, result)
 
-    def add(self, myuser, text):
+    def add(self, text, myuser):
         logging.debug('Add something')
         if text == None or text == '':
             pass
@@ -113,6 +108,26 @@ class MainPage(webapp2.RequestHandler):
                         logging.debug(result)
                         break
         return result
+
+    def numberSearch(self, number, myuser):
+        result = []
+        if self.numberIsValid(number):
+            number = int(number)
+            anagrams = self.getAnagramsOfUser(myuser)
+            for anagram in anagrams:
+                if len(anagram.sortedWord) == number:
+                    result.append(anagram)
+        else:
+            self.redirect('/')
+        return result
+
+    # returns true if the number is valid (positive and not None)
+    def numberIsValid(self, number):
+        if number:
+            number = int(number)
+            if number > 0:
+                return True
+        return False
 
     # get user from data
     def getMyUser(self):
