@@ -68,6 +68,15 @@ class MainPage(webapp2.RequestHandler):
             searchResult = self.search(inputText, myuser)
             self.renderSearchHTML(searchResult)
 
+        elif button == 'Show':
+            number = self.request.get('number')
+            if number:
+                number = int(number)
+                if number > 0:
+                    logging.debug('Search for anagrams with ' +
+                                  str(number) + ' letters.')
+            self.redirect('/')
+
     def add(self, myuser, text):
         logging.debug('Add something')
         if text == None or text == '':
