@@ -7,19 +7,19 @@
 
   <body>
     {% if user %}
-      <p>{{ message }}</p>
       <p>{{ user.email() }}
         is logged in.</p>
       <form method="post" action="/">
         Add Anagram:
         <br>
         <input type="text" name="anagram"/>
-        <input type="submit" name="add" value="Add"/>
-        <input type="submit" namw="search" value="Search"/>
+        <input type="submit" name="button" value="Add"/>
+        <input type="submit" name="button" value="Search"/>
       </form>
       <p>Your anagrams:</p>
       {% for anagram in anagrams %}
         {{ loop.index }}:
+        <b>{{ anagram.key.id() }}</b>
         {% for word in anagram.words %}
           {{ word }}
         {% endfor %}

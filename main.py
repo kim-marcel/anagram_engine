@@ -17,14 +17,14 @@ JINJA_ENVIRONMENT = jinja2.Environment(
 
 
 class MainPage(webapp2.RequestHandler):
+    # GET method
     def get(self):
-        logging.error("GET")
+        logging.debug("GET")
         self.response.headers['Content-Type'] = 'text/html'
 
         # defining variables
         url = ''
         url_string = ''
-        message = 'Welcome back. You have already logged in before.'
 
         # get current user (returns none if no user is logged in)
         user = self.getUser()
@@ -39,7 +39,6 @@ class MainPage(webapp2.RequestHandler):
 
             # if myuser object is None --> No user with key found --> new user --> make new user in datastore
             if myuser == None:
-                message = 'Welcome to the application. This is your first login.'
                 self.addNewUser(user)
 
         # if no user is logged in create login url
@@ -47,20 +46,38 @@ class MainPage(webapp2.RequestHandler):
             url = users.create_login_url(self.request.uri)
             url_string = 'login'
 
-        self.renderHTML(url, url_string, user, message,
+        self.renderHTML(url, url_string, user,
                         self.getAnagramsOfUser(self.getMyUser()))
 
-    # post method
+    # POST method
     def post(self):
-        logging.error("POST")
+        logging.debug("POST")
         self.response.headers['Content-Type'] = 'text/html'
 
         # get user data object from datastore of current user (logged in)
         myuser = self.getMyUser()
+        button = self.request.get('button')
+        inputText = self.request.get('anagram').lower()
 
-        text = self.request.get('anagram').lower()
+        if button == 'Add':
+            self.add(myuser, inputText)
+            # redirect to '/' --> MainPage
+            self.redirect('/')
+
+        elif button == 'Search':
+            searchResult = self.search(inputText, myuser)
+            template_search_values = {
+                'searchResult': searchResult
+            }
+
+            template = JINJA_ENVIRONMENT.get_template('searchResult.html')
+            self.response.write(template.render(template_search_values))
+
+    def add(self, myuser, text):
+        logging.debug('Add something')
         if text == None or text == '':
             pass
+
         else:
             # Add anagram to datastore
             anagramID = self.generateKey(text)
@@ -72,10 +89,26 @@ class MainPage(webapp2.RequestHandler):
                 myuser.addToAnagram(text, anagramKey)
             else:
                 # this key doesnt exist --> write new anagram object to datastore
-                myuser.addNewAnagram(text, myuser)
+                myuser.addNewAnagram(text)
+                # self.renderHTML()
 
-        # redirect to '/' --> MainPage
-        self.redirect('/')
+    # returns a list with all the items (if nothing found returns None)
+    def search(self, text, myuser):
+        logging.debug('Search: ' + text)
+        anagramID = self.generateKey(text)
+        anagrams = self.getAnagramsOfUser(myuser)
+        result = None
+        for anagram in anagrams:
+            logging.debug(anagram.key.id())
+            if anagram.key.id() == anagramID:
+                for word in anagram.words:
+                    if word == text:
+                        logging.debug('Success!!!')
+                        result = anagram.words
+                        result.remove(text)
+                        logging.debug(result)
+                        break
+        return result
 
     # get user from data
     def getMyUser(self):
@@ -101,23 +134,22 @@ class MainPage(webapp2.RequestHandler):
         # commit to datastore
         myuser.put()
 
-    def renderHTML(self, url, url_string, user, message, anagrams=None):
+    def renderHTML(self, url, url_string, user, anagrams):
         template_values = {
             'url': url,
             'url_string': url_string,
             'user': user,
             'anagrams': anagrams,
-            'message': message
         }
 
         template = JINJA_ENVIRONMENT.get_template('main.html')
         self.response.write(template.render(template_values))
 
     def getAnagramsOfUser(self, myUser):
-        logging.error("Test")
+        logging.debug("Test")
         if myUser:
-            logging.error("Logged in")
-            logging.error(myUser.anagrams)
+            logging.debug("Logged in")
+            logging.debug(myUser.anagrams)
             myList = []
 
             for x in myUser.anagrams:
