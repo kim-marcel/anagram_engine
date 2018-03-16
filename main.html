@@ -15,6 +15,10 @@
         <input type="text" name="anagram"/>
         <input type="submit" name="button" value="Add"/>
         <input type="submit" name="button" value="Search"/>
+        <br>
+        Show all anagrams with
+        <input type="number" name="number"/>letters:
+        <input type="submit" name="button" value="Show"/>
       </form>
       <p>Your anagrams:</p>
       {% for anagram in anagrams %}
