@@ -9,10 +9,18 @@ JINJA_ENVIRONMENT = jinja2.Environment(
 )
 
 
-def renderMainHTML(self, url, url_string, anagrams):
+def renderLoginHTML(self, url):
+    template_values = {
+        'url': url
+    }
+
+    template = JINJA_ENVIRONMENT.get_template('/templates/login.html')
+    self.response.write(template.render(template_values))
+
+
+def renderMainHTML(self, url, anagrams):
     template_values = {
         'url': url,
-        'url_string': url_string,
         'user': utilities.getUser(),
         'anagrams': anagrams,
     }

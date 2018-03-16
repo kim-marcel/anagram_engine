@@ -7,36 +7,43 @@
   </head>
 
   <body>
-    {% if user %}
+    <div class="header">
+      Anagram engine
+    </div>
+    <div class="content">
       <p>{{ user.email() }}
         is logged in.</p>
       <form method="post" action="/">
-        Add/ Search Anagram:
+        <u>Add/ Search Anagram:</u>
         <br>
-        <input type="text" name="anagram"/>
-        <input type="submit" name="button" value="Add"/>
-        <input type="submit" name="button" value="Search"/>
+        <input type="text" class="text_input" name="anagram"/><br>
+        <input type="submit" class="button_half" name="button" value="Add"/>
+        <input type="submit" class="button_half" name="button" value="Search"/>
         <br>
-        Show all anagrams with
-        <input type="number" name="number"/>letters:
-        <input type="submit" name="button" value="Show"/>
+        <br>
+        <u>Show all anagrams with</u>
+        <input type="number" class="number_input" name="number"/>
+        <u>letters:</u>
+        <input type="submit" class="button_full" name="button" value="Show"/>
       </form>
       <p>Your anagrams:</p>
-      {% for anagram in anagrams %}
-        {{ loop.index }}:
-        <b>{{ anagram.sortedWord }}</b>
-        {% for word in anagram.words %}
-          {{ word }}
+      <ul>
+        {% for anagram in anagrams %}
+          <li>
+            <b>{{ anagram.sortedWord }}</b>
+            {% for word in anagram.words %}
+              {{ word }}
+            {% endfor %}
+          </li>
+          <br>
         {% endfor %}
-        <br>
-      {% endfor %}
-
-    {% else %}
-      <p>You are not logged in. Login below:</p>
-    {% endif %}
-    <p>
-      <a href='{{ url }}'>{{ url_string }}</a>
-    </p>
+      </ul>
+    </div>
+    <a href="{{ url }}">
+      <div class="footer">
+        Logout
+      </div>
+    </a>
   </body>
 
 </html>

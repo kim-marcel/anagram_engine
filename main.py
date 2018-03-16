@@ -14,29 +14,18 @@ class MainPage(webapp2.RequestHandler):
         logging.debug("GET")
         self.response.headers['Content-Type'] = 'text/html'
 
-        # defining variables
-        url = ''
-        url_string = ''
-
         # check whether user is logged in
-        if utilities.isLoggedIn():
-            # generate logout url
-            url = utilities.getLogoutURL(self)
-            url_string = 'logout'
-
-            myuser = utilities.getMyUser()
-
+        if utilities.userIsLoggedIn():
             # if myuser object is None --> No user with key found --> new user --> make new user in datastore
-            if myuser == None:
+            if not utilities.userExists():
                 utilities.addNewUser(utilities.getUser())
+
+            renderer.renderMainHTML(
+                self, utilities.getLogoutURL(self), utilities.getAnagramsOfUser(utilities.getMyUser()))
 
         # if no user is logged in create login url
         else:
-            url = utilities.getLoginURL(self)
-            url_string = 'login'
-
-        renderer.renderMainHTML(self, url, url_string,
-                                utilities.getAnagramsOfUser(utilities.getMyUser()))
+            renderer.renderLoginHTML(self, utilities.getLoginURL(self))
 
     # POST method
     def post(self):

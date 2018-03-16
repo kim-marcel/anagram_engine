@@ -7,42 +7,49 @@
   </head>
 
   <body>
-
-    <p>Search results:</p>
-    {% if isNumberSearch %}
-      <!-- user searched for words with a specific lenght -->
-      {% if searchResult %}
-        These are your results:<br>
-        {% for anagram in searchResult %}
-          {{ loop.index }}:
-          <b>{{ anagram.sortedWord }}</b>
-          {% for word in anagram.words %}
-            {{ word }}
+    <div class="header">
+      Search results:
+    </div>
+    <div class="content">
+      {% if isNumberSearch %}
+        <!-- user searched for words with a specific lenght -->
+        {% if searchResult %}
+          These are your results:<br>
+          <ul>
+            {% for anagram in searchResult %}
+              <li>
+                <b>{{ anagram.sortedWord }}</b>
+                {% for word in anagram.words %}
+                  {{ word }}
+                {% endfor %}
+              </li>
+            {% endfor %}
+          </ul>
+        {% else %}
+          No words found with this length.
+        {% endif %}
+      {% else %}
+        <!-- user searched for anagrams of a word -->
+        {% if searchResult %}
+          Your Search result:
+          {% for item in searchResult %}
+            {{ item }}
           {% endfor %}
-          <br>
-        {% endfor %}
-      {% else %}
-        No words found with this length.
-      {% endif %}
-    {% else %}
-      <!-- user searched for anagrams of a word -->
-      {% if searchResult %}
-        Your Search result:
-        {% for item in searchResult %}
-          {{ item }}
-        {% endfor %}
-      {% else %}
-        No anagrams found for this word!
-      {% endif %}
+        {% else %}
+          No anagrams found for this word!
+        {% endif %}
 
-      {% if numberResult %}
-        Test
+        {% if numberResult %}
+          Test
+        {% endif %}
       {% endif %}
-    {% endif %}
+    </div>
 
-    <form method="get" action="/">
-      <input type="submit" value="Back"/>
-    </form>
+    <a href="/">
+      <div class="footer">
+        Back
+      </div>
+    </a>
 
   </body>
 

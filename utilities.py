@@ -20,13 +20,23 @@ def getMyUser():
         return myuser_key.get()
 
 
-def isLoggedIn():
+def userIsLoggedIn():
     # get current user (returns none if no user is logged in)
     user = getUser()
     if(user):
         return True
     else:
         return False
+
+# returns true if for this user a myuser object already exists in the datastore
+
+
+def userExists():
+    myuser = getMyUser()
+    if myuser == None:
+        # user doesnt exist
+        return False
+    return True
 
 
 def addNewUser(user):
