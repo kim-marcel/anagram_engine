@@ -17,7 +17,7 @@ def renderMainHTML(self, url, url_string, anagrams):
         'anagrams': anagrams,
     }
 
-    template = JINJA_ENVIRONMENT.get_template('main.html')
+    template = JINJA_ENVIRONMENT.get_template('/templates/main.html')
     self.response.write(template.render(template_values))
 
 
@@ -27,5 +27,5 @@ def renderSearchHTML(self, numberSearch, searchResult):
         'searchResult': searchResult,
     }
 
-    template = JINJA_ENVIRONMENT.get_template('searchResult.html')
+    template = JINJA_ENVIRONMENT.get_template('/templates/searchResult.html')
     self.response.write(template.render(template_search_values))

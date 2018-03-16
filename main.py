@@ -28,7 +28,7 @@ class MainPage(webapp2.RequestHandler):
 
             # if myuser object is None --> No user with key found --> new user --> make new user in datastore
             if myuser == None:
-                utilities.addNewUser(user)
+                utilities.addNewUser(utilities.getUser())
 
         # if no user is logged in create login url
         else:
