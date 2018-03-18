@@ -9,15 +9,19 @@ body {
 
 .header {
   background-color: #3b3a36;
-  text-align: center;
+  text-align: left;
   font-size: 25px;
   font-weight: bolder;
   color: #c0dfd9;
   margin: auto;
-  width: 50%;
+  width: 60%;
+  overflow: hidden;
   border: 0.5px solid grey;
   padding: 10px;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0px;
 }
 
 .sub-headline {
@@ -30,23 +34,38 @@ body {
   margin: auto;
   margin-top: 2px;
   margin-bottom: 2px;
-  width: 50%;
+  width: 60%;
   border: 0.5px solid grey;
   padding: 10px;
   min-height: 80%;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
-.footer {
+.content_search {
+  font-size: 20px;
+  background-color: #e9ece5;
+  margin: auto;
+  margin-top: 2px;
+  margin-bottom: 2px;
+  width: 60%;
+  border: 0.5px solid grey;
+  padding: 10px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.element {
   color: #c0dfd9;
   font-size: 16px;
   text-align: center;
   background-color: #3b3a36;
   margin: auto;
-  width: 50%;
+  width: 100%;
   border: 0.5px solid grey;
   padding: 10px;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  position: -webkit-sticky;
+  position: sticky;
+  bottom: 100px;
 }
 
 .button_full {
@@ -80,6 +99,13 @@ body {
   box-sizing: border-box;
 }
 
+.text_input_add {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  box-sizing: border-box;
+}
+
 .number_input {
   width: 30%;
   padding: 12px 20px;
@@ -87,7 +113,7 @@ body {
   box-sizing: border-box;
 }
 
-.table {
+table {
   width: 100%;
 }
 
@@ -100,7 +126,7 @@ th {
   font-size: 20px;
 }
 
-#button_search{
+.button_half{
   background-color: #c0dfd9;
   border: none;
   color: white;

@@ -8,33 +8,56 @@
 
   <body>
     <div class="header">
-      Search results:
+      <div style="float:left; width:70%">
+        Search results:
+      </div>
+      <div style="float:right; width:30%">
+        <a href="/">
+          <div class="element">
+            Back
+          </div>
+        </a>
+      </div>
     </div>
     <div class="content">
       {% if isNumberSearch %}
         <!-- user searched for words with a specific lenght -->
         {% if searchResult %}
-          These are your results:<br>
-          <ul>
+          <table>
+            <tr>
+              <th colspan="2">
+                These are your results:<br>
+              </th>
+            </tr>
             {% for anagram in searchResult %}
-              <li>
-                <b>{{ anagram.sortedWord }}</b>
-                {% for word in anagram.words %}
-                  {{ word }}
-                {% endfor %}
-              </li>
+              <tr>
+                <td>
+                  <b>{{ anagram.sortedWord }}</b>
+                </td>
+                <td>
+                  {% for word in anagram.words %}
+                    {% if loop.index == anagram.words | length %}
+                      {{ word }}
+                    {% else %}
+                      {{ word }},
+                    {% endif %}
+                  {% endfor %}
+                </td>
+              </tr>
             {% endfor %}
-          </ul>
-        {% else %}
-          No words found with this length.
-        {% endif %}
+          {% else %}
+            No words found with this length.
+          {% endif %}
+        </table>
       {% else %}
         <!-- user searched for anagrams of a word -->
         {% if searchResult %}
           Your Search result:
-          {% for item in searchResult %}
-            {{ item }}
-          {% endfor %}
+          <ul>
+            {% for item in searchResult %}
+              <li>{{ item }}</li>
+            {% endfor %}
+          </ul>
         {% else %}
           No anagrams found for this word!
         {% endif %}
@@ -44,13 +67,6 @@
         {% endif %}
       {% endif %}
     </div>
-
-    <a href="/">
-      <div class="footer">
-        Back
-      </div>
-    </a>
-
   </body>
 
 </html>
