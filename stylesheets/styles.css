@@ -10,7 +10,7 @@ body {
 .header {
   background-color: #3b3a36;
   text-align: center;
-  font-size: 35px;
+  font-size: 25px;
   font-weight: bolder;
   color: #c0dfd9;
   margin: auto;
@@ -18,6 +18,10 @@ body {
   border: 0.5px solid grey;
   padding: 10px;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.sub-headline {
+  font-size: 15px;
 }
 
 .content {
@@ -45,18 +49,6 @@ body {
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
-.button_half {
-  background-color: #c0dfd9;
-  border: none;
-  color: white;
-  padding: 15px 32px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
-  width: 49%;
-}
-
 .button_full {
   background-color: #c0dfd9;
   border: none;
@@ -69,8 +61,20 @@ body {
   width: 100%;
 }
 
-.text_input {
+.button_delete {
+  background-color: #c0dfd9;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
   width: 100%;
+}
+
+.text_input {
+  width: 79%;
   padding: 12px 20px;
   margin: 8px 0;
   box-sizing: border-box;
@@ -81,6 +85,32 @@ body {
   padding: 12px 20px;
   margin: 8px 0;
   box-sizing: border-box;
+}
+
+.table {
+  width: 100%;
+}
+
+th, td {
+    border-bottom: 1px solid #bbb;
+}
+
+th {
+  text-align: left;
+  font-size: 20px;
+}
+
+#button_search{
+  background-color: #c0dfd9;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  width: 20%;
+  float: right;
 }
 
 #buton_back {
@@ -97,4 +127,8 @@ body {
   top:0;
   left: 0;
   z-index: 1;
+}
+
+#delete_row {
+  width: 15%;
 }

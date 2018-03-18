@@ -36,6 +36,7 @@ class MainPage(webapp2.RequestHandler):
         myuser = utilities.getMyUser()
         button = self.request.get('button')
         inputText = self.request.get('anagram').lower()
+        logging.debug(button)
 
         if button == 'Add':
             self.add(inputText, myuser)
@@ -53,6 +54,12 @@ class MainPage(webapp2.RequestHandler):
                 renderer.renderSearchHTML(self, True, result)
             else:
                 self.redirect('/')
+
+        elif button == 'Delete':
+            logging.debug('Delete')
+            anagramId = myuser.key.id() + '/' + str(self.request.get('anagram_id'))
+            self.delete(myuser, anagramId)
+            self.redirect('/')
 
     def add(self, text, myuser):
         logging.debug('Add ' + text)
@@ -96,6 +103,11 @@ class MainPage(webapp2.RequestHandler):
             if len(anagram.sortedWord) == number:
                 result.append(anagram)
         return result
+
+    def delete(self, myuser, anagramId):
+        myuser.anagrams.remove(ndb.Key('Anagrams', anagramId))
+        myuser.put()
+        ndb.Key('Anagrams', anagramId).delete()
 
 
 # starts the web application we specify the full routing table here as well
