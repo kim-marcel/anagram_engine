@@ -80,6 +80,19 @@ body {
   width: 100%;
 }
 
+.button_half{
+  background-color: #c0dfd9;
+  border: none;
+  color: white;
+  padding: 15px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  width: 20%;
+  float: right;
+}
+
 .button_delete {
   background-color: #c0dfd9;
   border: none;
@@ -94,22 +107,24 @@ body {
 
 .text_input {
   width: 79%;
-  padding: 12px 20px;
-  margin: 8px 0;
+  padding: 15px 5px;
+  margin-top: 2px;
+  font-size: 13px;
   box-sizing: border-box;
 }
 
 .text_input_add {
   width: 100%;
-  padding: 12px 20px;
+  padding: 15px 5px;
   margin: 8px 0;
+  font-size: 13px;
   box-sizing: border-box;
 }
 
 .number_input {
-  width: 30%;
-  padding: 12px 20px;
-  margin: 8px 0;
+  width: 10%;
+  padding: 15px 5px;
+  margin: 2px 0;
   box-sizing: border-box;
 }
 
@@ -126,17 +141,8 @@ th {
   font-size: 20px;
 }
 
-.button_half{
-  background-color: #c0dfd9;
-  border: none;
-  color: white;
-  padding: 15px 32px;
-  text-align: center;
+a {
   text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
-  width: 20%;
-  float: right;
 }
 
 #buton_back {

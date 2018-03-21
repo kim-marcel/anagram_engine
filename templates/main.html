@@ -24,10 +24,12 @@
     </div>
     <div class="content">
       <form method="post" action="/">
-        <u>Search Anagram:</u>
-        <br>
-        <input type="text" class="text_input" name="anagram"/>
+        <input type="text" class="text_input" name="value" placeholder="Search your own anagrams..."/>
         <input type="submit" class="button_half" name="button" value="Search"/><br>
+      </form>
+      <form method="post" action="/">
+        <input type="text" class="text_input" name="value" placeholder="Let the computer generate anagrams...">
+        <input type="submit" class="button_half" name="button" value="Generate">
       </form>
       <!--</div> <div class="content">-->
       <form method="post" action="/">
@@ -35,6 +37,14 @@
         <input type="number" class="number_input" name="number"/>
         <u>letters:</u>
         <input type="submit" class="button_half" name="button" value="Show"/>
+      </form>
+      <form method="post" action="/">
+        <td colspan="2">
+          <input type="text" class="text_input" name="value" placeholder="Add a new anagram..."/>
+        </td>
+        <td>
+          <input type="submit" class="button_half" name="button" value="Add"/>
+        </td>
       </form>
       <table>
         <tr>
@@ -65,16 +75,7 @@
             </form>
           </tr>
         {% endfor %}
-        <tr>
-          <form method="post" action="/">
-            <td colspan="2">
-              <input type="text" class="text_input_add" name="anagram"/>
-            </td>
-            <td>
-              <input type="submit" class="button_full" name="button" value="Add"/>
-            </td>
-          </form>
-        </tr>
+        <tr></tr>
       </table>
 
     </div>

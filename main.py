@@ -9,7 +9,7 @@ import utilities
 
 
 class MainPage(webapp2.RequestHandler):
-    # GET method
+    # GET-request
     def get(self):
         logging.debug("GET")
         self.response.headers['Content-Type'] = 'text/html'
@@ -20,14 +20,15 @@ class MainPage(webapp2.RequestHandler):
             if not utilities.userExists():
                 utilities.addNewUser(utilities.getUser())
 
-            renderer.renderMainHTML(
-                self, utilities.getLogoutURL(self), utilities.getAnagramsOfUser(utilities.getMyUser()))
+            renderer.renderMainHTML(self, utilities.getLogoutURL(self),
+                                    utilities.getAnagramsOfUser(
+                                        utilities.getMyUser()))
 
         # if no user is logged in create login url
         else:
             renderer.renderLoginHTML(self, utilities.getLoginURL(self))
 
-    # POST method
+    # POST-request
     def post(self):
         logging.debug("POST")
         self.response.headers['Content-Type'] = 'text/html'
@@ -35,7 +36,8 @@ class MainPage(webapp2.RequestHandler):
         # get user data object from datastore of current user (logged in)
         myuser = utilities.getMyUser()
         button = self.request.get('button')
-        inputText = self.request.get('anagram').lower()
+        inputText = utilities.prepareTextInput(self.request.get('value'))
+        logging.debug(inputText)
         logging.debug(button)
 
         if button == 'Add':
@@ -56,10 +58,14 @@ class MainPage(webapp2.RequestHandler):
                 self.redirect('/')
 
         elif button == 'Delete':
-            logging.debug('Delete')
-            anagramId = myuser.key.id() + '/' + str(self.request.get('anagram_id'))
+            anagramId = myuser.key.id() + '/' + str(
+                self.request.get('anagram_id'))
             self.delete(myuser, anagramId)
             self.redirect('/')
+
+        elif button == 'Generate':
+            words = self.generate(inputText)
+            renderer.renderSearchHTML(self, False, words)
 
     def add(self, text, myuser):
         logging.debug('Add ' + text)
@@ -109,8 +115,16 @@ class MainPage(webapp2.RequestHandler):
         myuser.put()
         ndb.Key('Anagrams', anagramId).delete()
 
+    def generate(self, inputText):
+        permutations = utilities.allPermutations(inputText)
+        words = utilities.filterEnglishWords(permutations)
+        if inputText in words:
+            words.remove(inputText)
+        return words
+
 
 # starts the web application we specify the full routing table here as well
-app = webapp2.WSGIApplication([
-    ('/', MainPage),
-], debug=True)
+app = webapp2.WSGIApplication(
+    [
+        ('/', MainPage),
+    ], debug=True)
