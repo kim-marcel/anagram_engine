@@ -2,18 +2,18 @@
 
   <head>
     <meta charset="utf-8"/>
-    <title>Search results</title>
+    <title>Search Results - Anagram Engine</title>
     <link type="text/css" rel="stylesheet" href="/stylesheets/styles.css"/>
   </head>
 
   <body>
     <div class="header">
-      <div style="float:left; width:70%">
-        Search results:
+      <div style="float:left; width:70%; text-align: left;">
+        Search Results
       </div>
       <div style="float:right; width:30%">
         <a href="/">
-          <div class="element">
+          <div class="button_element">
             Back
           </div>
         </a>
@@ -31,10 +31,10 @@
             </tr>
             {% for anagram in searchResult %}
               <tr>
-                <td>
+                <td class="anagram_table_data_sortedWord">
                   <b>{{ anagram.sortedWord }}</b>
                 </td>
-                <td>
+                <td class="anagram_table_data">
                   {% for word in anagram.words %}
                     {% if loop.index == anagram.words | length %}
                       {{ word }}
@@ -52,12 +52,18 @@
       {% else %}
         <!-- user searched for anagrams of a word -->
         {% if searchResult %}
-          Your Search result:
-          <ul>
+          <table>
+            <tr>
+              <th>
+                Your Search result:
+              </th>
+            </tr>
             {% for item in searchResult %}
-              <li>{{ item }}</li>
+              <tr>
+                <td class="anagram_table_data">{{ item }}</td>
+              </tr>
             {% endfor %}
-          </ul>
+          </table>
         {% else %}
           No anagrams found for this word!<br>
         {% endif %}

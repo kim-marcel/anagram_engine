@@ -1,9 +1,7 @@
-import webapp2
-import logging
 from google.appengine.api import users
 from google.appengine.ext import ndb
-from myuser import MyUser
-from anagrams import Anagrams
+import webapp2
+import logging
 import renderer
 import utilities
 
@@ -42,7 +40,6 @@ class MainPage(webapp2.RequestHandler):
 
         if button == 'Add':
             self.add(inputText, myuser)
-            # redirect to '/' --> MainPage
             self.redirect('/')
 
         elif button == 'Search':
@@ -74,7 +71,7 @@ class MainPage(webapp2.RequestHandler):
 
         else:
             # Add anagram to datastore
-            anagramID = myuser.key.id() + '/' + Anagrams.generateKey(text)
+            anagramID = myuser.key.id() + '/' + utilities.generateId(text)
             anagramKey = ndb.Key('Anagrams', anagramID)
             anagrams = anagramKey.get()
 
@@ -88,18 +85,15 @@ class MainPage(webapp2.RequestHandler):
     # returns a list with all the items (if nothing found returns None)
     def search(self, text, myuser):
         logging.debug('Search: ' + text)
-        anagramID = myuser.key.id() + '/' + Anagrams.generateKey(text)
-        anagrams = utilities.getAnagramsOfUser(myuser)
-        result = None
-        for anagram in anagrams:
-            logging.debug(anagram.key.id())
-            if anagram.key.id() == anagramID:
-                for word in anagram.words:
-                    if word == text:
-                        result = anagram.words
-                        result.remove(text)
-                        break
-        return result
+        anagramID = myuser.key.id() + '/' + utilities.generateId(text)
+        anagram = ndb.Key('Anagrams', anagramID).get()
+
+        if anagram:
+            result = anagram.words
+            result.remove(text)
+            return result
+        else:
+            return None
 
     def numberSearch(self, number, myuser):
         result = []
@@ -123,7 +117,7 @@ class MainPage(webapp2.RequestHandler):
         return words
 
 
-# starts the web application we specify the full routing table here as well
+# starts the web application and specifies the routing table
 app = webapp2.WSGIApplication(
     [
         ('/', MainPage),

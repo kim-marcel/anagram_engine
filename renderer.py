@@ -5,14 +5,11 @@ import utilities
 JINJA_ENVIRONMENT = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
     extensions=['jinja2.ext.autoescape'],
-    autoescape=True
-)
+    autoescape=True)
 
 
 def renderLoginHTML(self, url):
-    template_values = {
-        'url': url
-    }
+    template_values = {'url': url}
 
     template = JINJA_ENVIRONMENT.get_template('/templates/login.html')
     self.response.write(template.render(template_values))

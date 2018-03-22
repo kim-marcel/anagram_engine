@@ -3,7 +3,7 @@ from google.appengine.api import users
 from myuser import MyUser
 from anagrams import Anagrams
 import logging
-import re
+import re  #regex
 
 # define global variable as a list with all english words read from a file
 with open("wordsEn.txt") as wordFile:
@@ -24,45 +24,33 @@ def getMyUser():
 
 
 def userIsLoggedIn():
-    # get current user (returns none if no user is logged in)
-    user = getUser()
-    if (user):
-        return True
-    else:
-        return False
+    return True if getUser() else False
 
 
 # returns true if for this user a myuser object already exists in the datastore
 def userExists():
-    myuser = getMyUser()
-    if myuser == None:
-        # user doesnt exist
-        return False
-    return True
+    return True if getMyUser() else False
 
 
 def addNewUser(user):
-    myuser = MyUser(id=user.user_id())
-    # commit to datastore
-    myuser.put()
+    MyUser(id=user.user_id()).put()
 
 
 def getAnagramsOfUser(myUser):
     if myUser:
-        logging.debug("Logged in")
         logging.debug(myUser.anagrams)
-        myList = []
+        result = []
 
-        for x in myUser.anagrams:
-            anagrams = x.get()
-            myList.append(anagrams)
+        for anagram in myUser.anagrams:
+            anagrams = anagram.get()
+            result.append(anagrams)
 
-        return myList
+        return result
 
 
 def addNewAnagram(myuser, text):
-    if text in englishWords:
-        generatedKey = Anagrams.generateKey(text)
+    if isEnglishWord(text):
+        generatedKey = generateId(text)
         key = myuser.key.id() + '/' + generatedKey
         anagram = Anagrams(id=key)
         anagram.words.append(text)
@@ -76,11 +64,16 @@ def addNewAnagram(myuser, text):
 def addToAnagram(text, anagramKey):
     anagram = anagramKey.get()
     if text not in anagram.words:
-        if text in englishWords:
+        if isEnglishWord(text):
             # append word
             anagram.words.append(text)
             # commit to datastore
             anagram.put()
+
+
+def generateId(text):
+    key = text.lower()
+    return ''.join(sorted(key))
 
 
 # return a list of all permutations of a given string
@@ -94,6 +87,11 @@ def allPermutations(inputString):
             result.append(letter + perm)
 
     return result
+
+
+# returns true if the given string is an english word
+def isEnglishWord(text):
+    return True if text in englishWords else False
 
 
 # get a list with words and filter this list
