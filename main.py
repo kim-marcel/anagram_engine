@@ -1,9 +1,9 @@
-from google.appengine.api import users
 from google.appengine.ext import ndb
 import webapp2
 import logging
 import renderer
 import utilities
+from anagrams import Anagrams
 
 
 class MainPage(webapp2.RequestHandler):
@@ -96,12 +96,8 @@ class MainPage(webapp2.RequestHandler):
             return None
 
     def numberSearch(self, number, myuser):
-        result = []
         number = int(number)
-        anagrams = utilities.getAnagramsOfUser(myuser)
-        for anagram in anagrams:
-            if len(anagram.sortedWord) == number:
-                result.append(anagram)
+        result = Anagrams.query(Anagrams.length == number, Anagrams.userId == myuser.key.id()).fetch()
         return result
 
     def delete(self, myuser, anagramId):

@@ -1,5 +1,4 @@
 from google.appengine.ext import ndb
-from anagrams import Anagrams
 
 
 class MyUser(ndb.Model):

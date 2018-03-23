@@ -55,6 +55,8 @@ def addNewAnagram(myuser, text):
         anagram = Anagrams(id=key)
         anagram.words.append(text)
         anagram.sortedWord = generatedKey
+        anagram.length = len(text)
+        anagram.userId = myuser.key.id()
         anagram.put()
         # add key of the new anagram to the users KeyProperty
         myuser.anagrams.append(ndb.Key('Anagrams', key))
