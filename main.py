@@ -44,13 +44,13 @@ class MainPage(webapp2.RequestHandler):
 
         elif button == 'Search':
             searchResult = self.search(inputText, myuser)
-            renderer.renderSearchHTML(self, False, searchResult)
+            renderer.renderSearchHTML(self, False, inputText, searchResult)
 
         elif button == 'Show':
             number = self.request.get('number')
             if utilities.numberIsValid(number):
                 result = self.numberSearch(number, myuser)
-                renderer.renderSearchHTML(self, True, result)
+                renderer.renderSearchHTML(self, True, number, result)
             else:
                 self.redirect('/')
 
@@ -62,7 +62,7 @@ class MainPage(webapp2.RequestHandler):
 
         elif button == 'Generate':
             words = self.generate(inputText)
-            renderer.renderSearchHTML(self, False, words)
+            renderer.renderSearchHTML(self, False, inputText, words)
 
     def add(self, text, myuser):
         logging.debug('Add ' + text)

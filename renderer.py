@@ -26,9 +26,10 @@ def renderMainHTML(self, url, anagrams):
     self.response.write(template.render(template_values))
 
 
-def renderSearchHTML(self, numberSearch, searchResult):
+def renderSearchHTML(self, numberSearch, searchTerm, searchResult):
     template_search_values = {
         'isNumberSearch': numberSearch,
+        'searchTerm': searchTerm,
         'searchResult': searchResult,
     }
 

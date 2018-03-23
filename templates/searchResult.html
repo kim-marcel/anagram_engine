@@ -26,7 +26,9 @@
           <table>
             <tr>
               <th colspan="2">
-                These are your results:<br>
+                These are all anagrams with
+                {{ searchTerm }}
+                letters:<br>
               </th>
             </tr>
             {% for anagram in searchResult %}
@@ -55,7 +57,7 @@
           <table>
             <tr>
               <th>
-                Your Search result:
+                These are the anagrams of "{{ searchTerm }}":
               </th>
             </tr>
             {% for item in searchResult %}
