@@ -8,17 +8,17 @@ JINJA_ENVIRONMENT = jinja2.Environment(
     autoescape=True)
 
 
-def renderLoginHTML(self, url):
+def render_login(self, url):
     template_values = {'url': url}
 
     template = JINJA_ENVIRONMENT.get_template('/templates/login.html')
     self.response.write(template.render(template_values))
 
 
-def renderMainHTML(self, url, anagrams):
+def render_main(self, url, anagrams):
     template_values = {
         'url': url,
-        'user': utilities.getUser(),
+        'user': utilities.get_user(),
         'anagrams': anagrams,
     }
 
@@ -26,12 +26,13 @@ def renderMainHTML(self, url, anagrams):
     self.response.write(template.render(template_values))
 
 
-def renderSearchHTML(self, numberSearch, searchTerm, searchResult):
+def render_search(self, is_number_search, search_term, search_result):
     template_search_values = {
-        'isNumberSearch': numberSearch,
-        'searchTerm': searchTerm,
-        'searchResult': searchResult,
+        'is_number_search': is_number_search,
+        'search_term': search_term,
+        'search_result': search_result,
     }
 
     template = JINJA_ENVIRONMENT.get_template('/templates/searchResult.html')
+
     self.response.write(template.render(template_search_values))

@@ -13,18 +13,17 @@ class MainPage(webapp2.RequestHandler):
         self.response.headers['Content-Type'] = 'text/html'
 
         # check whether user is logged in
-        if utilities.userIsLoggedIn():
+        if utilities.user_is_logged_in():
             # if myuser object is None --> No user with key found --> new user --> make new user in datastore
-            if not utilities.userExists():
-                utilities.addNewUser(utilities.getUser())
+            if not utilities.user_exists():
+                utilities.add_new_user(utilities.get_user())
 
-            renderer.renderMainHTML(self, utilities.getLogoutURL(self),
-                                    utilities.getAnagramsOfUser(
-                                        utilities.getMyUser()))
+            renderer.render_main(self, utilities.get_logout_url(self),
+                                 utilities.get_anagrams_of_user(utilities.get_my_user()))
 
         # if no user is logged in create login url
         else:
-            renderer.renderLoginHTML(self, utilities.getLoginURL(self))
+            renderer.render_login(self, utilities.get_login_url(self))
 
     # POST-request
     def post(self):
@@ -32,61 +31,61 @@ class MainPage(webapp2.RequestHandler):
         self.response.headers['Content-Type'] = 'text/html'
 
         # get user data object from datastore of current user (logged in)
-        myuser = utilities.getMyUser()
+        my_user = utilities.get_my_user()
         button = self.request.get('button')
-        inputText = utilities.prepareTextInput(self.request.get('value'))
-        logging.debug(inputText)
+        input_text = utilities.prepare_text_input(self.request.get('value'))
+        logging.debug(input_text)
         logging.debug(button)
 
         if button == 'Add':
-            self.add(inputText, myuser)
+            self.add(input_text, my_user)
             self.redirect('/')
 
         elif button == 'Search':
-            searchResult = self.search(inputText, myuser)
-            renderer.renderSearchHTML(self, False, inputText, searchResult)
+            search_result = self.search(input_text, my_user)
+            renderer.render_search(self, False, input_text, search_result)
 
         elif button == 'Show':
             number = self.request.get('number')
-            if utilities.numberIsValid(number):
-                result = self.numberSearch(number, myuser)
-                renderer.renderSearchHTML(self, True, number, result)
+            if utilities.number_is_valid(number):
+                result = self.number_search(number, my_user)
+                renderer.render_search(self, True, number, result)
             else:
                 self.redirect('/')
 
         elif button == 'Delete':
-            anagramId = myuser.key.id() + '/' + str(
+            anagram_id = my_user.key.id() + '/' + str(
                 self.request.get('anagram_id'))
-            self.delete(myuser, anagramId)
+            self.delete(my_user, anagram_id)
             self.redirect('/')
 
         elif button == 'Generate':
-            words = self.generate(inputText)
-            renderer.renderSearchHTML(self, False, inputText, words)
+            words = self.generate(input_text)
+            renderer.render_search(self, False, input_text, words)
 
-    def add(self, text, myuser):
+    def add(self, text, my_user):
         logging.debug('Add ' + text)
-        if text == None or text == '':
+        if text is None or text == '':
             pass
 
         else:
             # Add anagram to datastore
-            anagramID = myuser.key.id() + '/' + utilities.generateId(text)
-            anagramKey = ndb.Key('Anagrams', anagramID)
-            anagrams = anagramKey.get()
+            anagram_id = my_user.key.id() + '/' + utilities.generate_id(text)
+            anagram_key = ndb.Key('Anagrams', anagram_id)
+            anagrams = anagram_key.get()
 
             if anagrams:
                 # an anagram with this key already exists
-                utilities.addToAnagram(text, anagramKey)
+                utilities.add_to_anagram(text, anagram_key)
             else:
                 # this key doesnt exist --> write new anagram object to datastore
-                utilities.addNewAnagram(myuser, text)
+                utilities.add_new_anagram(my_user, text)
 
     # returns a list with all the items (if nothing found returns None)
-    def search(self, text, myuser):
+    def search(self, text, my_user):
         logging.debug('Search: ' + text)
-        anagramID = myuser.key.id() + '/' + utilities.generateId(text)
-        anagram = ndb.Key('Anagrams', anagramID).get()
+        anagram_id = my_user.key.id() + '/' + utilities.generate_id(text)
+        anagram = ndb.Key('Anagrams', anagram_id).get()
 
         if anagram:
             result = anagram.words
@@ -95,21 +94,21 @@ class MainPage(webapp2.RequestHandler):
         else:
             return None
 
-    def numberSearch(self, number, myuser):
+    def number_search(self, number, my_user):
         number = int(number)
-        result = Anagrams.query(Anagrams.length == number, Anagrams.userId == myuser.key.id()).fetch()
+        result = Anagrams.query(Anagrams.length == number, Anagrams.user_id == my_user.key.id()).fetch()
         return result
 
-    def delete(self, myuser, anagramId):
-        myuser.anagrams.remove(ndb.Key('Anagrams', anagramId))
-        myuser.put()
-        ndb.Key('Anagrams', anagramId).delete()
+    def delete(self, my_user, anagram_id):
+        my_user.anagrams.remove(ndb.Key('Anagrams', anagram_id))
+        my_user.put()
+        ndb.Key('Anagrams', anagram_id).delete()
 
-    def generate(self, inputText):
-        permutations = utilities.allPermutations(inputText)
-        words = utilities.filterEnglishWords(permutations)
-        if inputText in words:
-            words.remove(inputText)
+    def generate(self, input_text):
+        permutations = utilities.all_permutations(input_text)
+        words = utilities.filter_english_words(permutations)
+        if input_text in words:
+            words.remove(input_text)
         return words
 
 

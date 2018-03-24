@@ -1,81 +1,81 @@
 <html>
 
-  <head>
+<head>
     <meta charset="utf-8"/>
     <title>Search Results - Anagram Engine</title>
     <link type="text/css" rel="stylesheet" href="/stylesheets/styles.css"/>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
-  </head>
+</head>
 
-  <body>
-    <div class="header">
-      <div style="float:left; width:70%; text-align: left;">
+<body>
+<div class="header">
+    <div style="float:left; width:70%; text-align: left;">
         Search Results
-      </div>
-      <div style="float:right; width:30%">
-        <a href="/">
-          <div class="button_element">
-            Back
-          </div>
-        </a>
-      </div>
     </div>
-    <div class="content">
-      {% if isNumberSearch %}
+    <div style="float:right; width:30%">
+        <a href="/">
+            <div class="button_element">
+                Back
+            </div>
+        </a>
+    </div>
+</div>
+<div class="content">
+    {% if is_number_search %}
         <!-- user searched for words with a specific lenght -->
-        {% if searchResult %}
-          <table>
+        {% if search_result %}
+            <table>
             <tr>
-              <th colspan="2">
-                These are all anagrams with
-                {{ searchTerm }}
-                letters:<br>
-              </th>
+                <th colspan="2">
+                    These are all anagrams with
+                    {{ search_term }}
+                    letters:<br>
+                </th>
             </tr>
-            {% for anagram in searchResult %}
-              <tr>
-                <td class="anagram_table_data_sortedWord">
-                  <b>{{ anagram.sortedWord }}</b>
-                </td>
-                <td class="anagram_table_data">
-                  {% for word in anagram.words %}
-                    {% if loop.index == anagram.words | length %}
-                      {{ word }}
-                    {% else %}
-                      {{ word }},
-                    {% endif %}
-                  {% endfor %}
-                </td>
-              </tr>
+            {% for anagram in search_result %}
+                <tr>
+                    <td class="anagram_table_data_sortedWord">
+                        <b>{{ anagram.sorted_word }}</b>
+                    </td>
+                    <td class="anagram_table_data">
+                        {% for word in anagram.words %}
+                            {% if loop.index == anagram.words | length %}
+                                {{ word }}
+                            {% else %}
+                                {{ word }},
+                            {% endif %}
+                        {% endfor %}
+                    </td>
+                </tr>
             {% endfor %}
-          {% else %}
-            No words found with this length.
-          {% endif %}
-        </table>
-      {% else %}
-        <!-- user searched for anagrams of a word -->
-        {% if searchResult %}
-          <table>
-            <tr>
-              <th>
-                These are the anagrams of "{{ searchTerm }}":
-              </th>
-            </tr>
-            {% for item in searchResult %}
-              <tr>
-                <td class="anagram_table_data">{{ item }}</td>
-              </tr>
-            {% endfor %}
-          </table>
         {% else %}
-          No anagrams found for this word!<br>
+            No words found with this length.
+        {% endif %}
+    </table>
+    {% else %}
+        <!-- user searched for anagrams of a word -->
+        {% if search_result %}
+            <table>
+                <tr>
+                    <th>
+                        These are the anagrams of "{{ search_term }}":
+                    </th>
+                </tr>
+                {% for item in search_result %}
+                    <tr>
+                        <td class="anagram_table_data">{{ item }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        {% else %}
+            No anagrams found for this word!<br>
         {% endif %}
 
-        {% if numberResult %}
-          Test
+        {% if number_result %}
+            Test
         {% endif %}
-      {% endif %}
-    </div>
-  </body>
+    {% endif %}
+</div>
+</body>
 
 </html>

@@ -3,105 +3,105 @@ from google.appengine.api import users
 from myuser import MyUser
 from anagrams import Anagrams
 import logging
-import re  #regex
+import re  # regex
 
 # define global variable as a list with all english words read from a file
-with open("wordsEn.txt") as wordFile:
-    englishWords = set(word.strip().lower() for word in wordFile)
+with open("wordsEn.txt") as word_file:
+    english_words = set(word.strip().lower() for word in word_file)
 
 
 # Get user from this page
-def getUser():
+def get_user():
     return users.get_current_user()
 
 
 # get user from data
-def getMyUser():
-    user = getUser()
+def get_my_user():
+    user = get_user()
     if user:
         myuser_key = ndb.Key('MyUser', user.user_id())
         return myuser_key.get()
 
 
-def userIsLoggedIn():
-    return True if getUser() else False
+def user_is_logged_in():
+    return True if get_user() else False
 
 
 # returns true if for this user a myuser object already exists in the datastore
-def userExists():
-    return True if getMyUser() else False
+def user_exists():
+    return True if get_my_user() else False
 
 
-def addNewUser(user):
+def add_new_user(user):
     MyUser(id=user.user_id()).put()
 
 
-def getAnagramsOfUser(myUser):
-    if myUser:
-        logging.debug(myUser.anagrams)
+def get_anagrams_of_user(my_user):
+    if my_user:
+        logging.debug(my_user.anagrams)
         result = []
 
-        for anagram in myUser.anagrams:
+        for anagram in my_user.anagrams:
             anagrams = anagram.get()
             result.append(anagrams)
 
         return result
 
 
-def addNewAnagram(myuser, text):
-    if isEnglishWord(text):
-        generatedKey = generateId(text)
-        key = myuser.key.id() + '/' + generatedKey
+def add_new_anagram(my_user, text):
+    if is_english_word(text):
+        generatedKey = generate_id(text)
+        key = my_user.key.id() + '/' + generatedKey
         anagram = Anagrams(id=key)
         anagram.words.append(text)
-        anagram.sortedWord = generatedKey
+        anagram.sorted_word = generatedKey
         anagram.length = len(text)
-        anagram.userId = myuser.key.id()
+        anagram.user_id = my_user.key.id()
         anagram.put()
         # add key of the new anagram to the users KeyProperty
-        myuser.anagrams.append(ndb.Key('Anagrams', key))
-        myuser.put()
+        my_user.anagrams.append(ndb.Key('Anagrams', key))
+        my_user.put()
 
 
-def addToAnagram(text, anagramKey):
-    anagram = anagramKey.get()
+def add_to_anagram(text, anagram_key):
+    anagram = anagram_key.get()
     if text not in anagram.words:
-        if isEnglishWord(text):
+        if is_english_word(text):
             # append word
             anagram.words.append(text)
             # commit to datastore
             anagram.put()
 
 
-def generateId(text):
+def generate_id(text):
     key = text.lower()
     return ''.join(sorted(key))
 
 
 # return a list of all permutations of a given string
-def allPermutations(inputString):
-    if len(inputString) == 1:
-        return inputString
+def all_permutations(input_string):
+    if len(input_string) == 1:
+        return input_string
 
     result = []
-    for letter in inputString:
-        for perm in allPermutations(inputString.replace(letter, '', 1)):
+    for letter in input_string:
+        for perm in all_permutations(input_string.replace(letter, '', 1)):
             result.append(letter + perm)
 
     return result
 
 
 # returns true if the given string is an english word
-def isEnglishWord(text):
-    return True if text in englishWords else False
+def is_english_word(text):
+    return True if text in english_words else False
 
 
 # get a list with words and filter this list
 # returns a list with only the english words
-def filterEnglishWords(wordList):
+def filter_english_words(word_list):
     result = []
-    for word in wordList:
-        if word in englishWords:
+    for word in word_list:
+        if word in english_words:
             if word not in result:
                 result.append(word)
 
@@ -109,7 +109,7 @@ def filterEnglishWords(wordList):
 
 
 # returns true if the number is valid (positive and not None)
-def numberIsValid(number):
+def number_is_valid(number):
     if number:
         number = int(number)
         if number > 0:
@@ -117,15 +117,15 @@ def numberIsValid(number):
     return False
 
 
-def prepareTextInput(inputText):
-    result = inputText.lower()
+def prepare_text_input(input_text):
+    result = input_text.lower()
     result = re.sub('[^a-z]+', '', result)
     return result
 
 
-def getLoginURL(mainPage):
-    return users.create_login_url(mainPage.request.uri)
+def get_login_url(main_page):
+    return users.create_login_url(main_page.request.uri)
 
 
-def getLogoutURL(mainPage):
-    return users.create_logout_url(mainPage.request.uri)
+def get_logout_url(main_page):
+    return users.create_logout_url(main_page.request.uri)
