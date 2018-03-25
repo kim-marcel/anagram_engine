@@ -3,7 +3,7 @@ import webapp2
 import logging
 import renderer
 import utilities
-from anagrams import Anagrams
+from anagram import Anagram
 
 
 class MainPage(webapp2.RequestHandler):
@@ -54,8 +54,7 @@ class MainPage(webapp2.RequestHandler):
                 self.redirect('/')
 
         elif button == 'Delete':
-            anagram_id = my_user.key.id() + '/' + str(
-                self.request.get('anagram_id'))
+            anagram_id = my_user.key.id() + '/' + str(self.request.get('anagram_id'))
             self.delete(my_user, anagram_id)
             self.redirect('/')
 
@@ -65,13 +64,10 @@ class MainPage(webapp2.RequestHandler):
 
     def add(self, text, my_user):
         logging.debug('Add ' + text)
-        if text is None or text == '':
-            pass
-
-        else:
+        if text is not None or text != '':
             # Add anagram to datastore
             anagram_id = my_user.key.id() + '/' + utilities.generate_id(text)
-            anagram_key = ndb.Key('Anagrams', anagram_id)
+            anagram_key = ndb.Key(Anagram, anagram_id)
             anagrams = anagram_key.get()
 
             if anagrams:
@@ -79,13 +75,13 @@ class MainPage(webapp2.RequestHandler):
                 utilities.add_to_anagram(text, anagram_key)
             else:
                 # this key doesnt exist --> write new anagram object to datastore
-                utilities.add_new_anagram(my_user, text)
+                utilities.add_new_anagram(my_user, text, anagram_id, anagram_key)
 
     # returns a list with all the items (if nothing found returns None)
     def search(self, text, my_user):
         logging.debug('Search: ' + text)
         anagram_id = my_user.key.id() + '/' + utilities.generate_id(text)
-        anagram = ndb.Key('Anagrams', anagram_id).get()
+        anagram = ndb.Key(Anagram, anagram_id).get()
 
         if anagram:
             result = anagram.words
@@ -96,13 +92,15 @@ class MainPage(webapp2.RequestHandler):
 
     def number_search(self, number, my_user):
         number = int(number)
-        result = Anagrams.query(Anagrams.length == number, Anagrams.user_id == my_user.key.id()).fetch()
+        result = Anagram.query(Anagram.length == number, Anagram.user_id == my_user.key.id()).fetch()
         return result
 
     def delete(self, my_user, anagram_id):
-        my_user.anagrams.remove(ndb.Key('Anagrams', anagram_id))
-        my_user.put()
-        ndb.Key('Anagrams', anagram_id).delete()
+        anagram_key = ndb.Key(Anagram, anagram_id)
+        if anagram_key in my_user.anagrams:
+            my_user.anagrams.remove(anagram_key)
+            my_user.put()
+            ndb.Key(Anagram, anagram_id).delete()
 
     def generate(self, input_text):
         permutations = utilities.all_permutations(input_text)

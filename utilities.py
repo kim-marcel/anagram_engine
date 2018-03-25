@@ -1,7 +1,7 @@
 from google.appengine.ext import ndb
 from google.appengine.api import users
 from myuser import MyUser
-from anagrams import Anagrams
+from anagram import Anagram
 import logging
 import re  # regex
 
@@ -19,8 +19,8 @@ def get_user():
 def get_my_user():
     user = get_user()
     if user:
-        myuser_key = ndb.Key('MyUser', user.user_id())
-        return myuser_key.get()
+        my_user_key = ndb.Key(MyUser, user.user_id())
+        return my_user_key.get()
 
 
 def user_is_logged_in():
@@ -48,18 +48,16 @@ def get_anagrams_of_user(my_user):
         return result
 
 
-def add_new_anagram(my_user, text):
+def add_new_anagram(my_user, text, anagram_id, anagram_key):
     if is_english_word(text):
-        generatedKey = generate_id(text)
-        key = my_user.key.id() + '/' + generatedKey
-        anagram = Anagrams(id=key)
+        anagram = Anagram(id=anagram_id)
         anagram.words.append(text)
-        anagram.sorted_word = generatedKey
+        anagram.sorted_word = generate_id(text)
         anagram.length = len(text)
         anagram.user_id = my_user.key.id()
         anagram.put()
         # add key of the new anagram to the users KeyProperty
-        my_user.anagrams.append(ndb.Key('Anagrams', key))
+        my_user.anagrams.append(anagram_key)
         my_user.put()
 
 

@@ -1,7 +1,7 @@
 from google.appengine.ext import ndb
 
 
-class Anagrams(ndb.Model):
+class Anagram(ndb.Model):
     # alphabetically sorted word
     sorted_word = ndb.StringProperty()
     # length of the anagram
